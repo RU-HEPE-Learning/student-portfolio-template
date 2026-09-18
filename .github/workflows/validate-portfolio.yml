@@ -1,0 +1,30 @@
+name: Validate Portfolio Structure
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required portfolio files
+        shell: bash
+        run: |
+          set -e
+          required=(
+            "README.md"
+            "PRIVACY.md"
+            "profile.md"
+            "PORTFOLIO-INDEX.md"
+            "TRACEABILITY.md"
+            "feedback/README.md"
+            "final/README.md"
+          )
+          for f in "${required[@]}"; do
+            test -f "$f" || { echo "Missing required file: $f"; exit 1; }
+          done
+          echo "PASS: Learning Hub portfolio structure exists."
+      - name: Human authority notice
+        run: echo 'Portfolio validation checks structure only and is not an official gradebook.'
